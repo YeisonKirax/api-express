@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/YeisonKirax/api-express#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.1.3",
     "express": "^4.18.2",
     "uuid": "^9.0.0"

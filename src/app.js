@@ -1,3 +1,4 @@
+import cors from 'cors'
 import express from 'express'
 import environment from './config/environment.js'
 import usersRouter from './resources/users/routes/users.routes.js'
@@ -5,6 +6,7 @@ import usersRouter from './resources/users/routes/users.routes.js'
 const app = express()
 
 app.use( express.json() )
+app.use( cors() )
 
 app.get( '/', function ( req, res ) {
   return res.status( 200 ).json( { msg: "Bienvenido" } )
