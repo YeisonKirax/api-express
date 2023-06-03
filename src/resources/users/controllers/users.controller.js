@@ -1,46 +1,58 @@
-import { v4 as generateUUID } from 'uuid'
+import { awaitCatcher } from 'await-catcher'
+import { UserModel } from '../models/user.model.js'
 const users = []
-export function createUser( req, res ) {
+export async function createUser( req, res ) {
   const body = req.body
-  const id = generateUUID()
-  const userCreated = {
-    ...body,
-    id: id
+  // try {
+  //   const userCreated = await UserModel.create( body ) //insertOne en mongo
+  //   return res.status( 201 ).json( userCreated )
+
+  // } catch ( error ) {
+  //   return res.status( 400 ).json( { status: "error", msg: error.message } )
+  // }
+  // const newUser = new UserModel( body )
+  // await newUser.save()
+  const [ userCreated, error ] = await awaitCatcher( UserModel.create( body ) )
+  if ( error ) {
+    return res.status( 400 ).json( { status: "error", msg: error.message } )
   }
-  users.push( userCreated )
   return res.status( 201 ).json( userCreated )
+
 }
 
-export function getUsers( req, res ) {
+export async function getUsers( req, res ) {
+  const [ users, error ] = await awaitCatcher( UserModel.find() )
+  if ( error ) {
+    return res.status( 400 ).json( { status: "error", msg: error.message } )
+  }
   return res.status( 200 ).json( users )
 }
 
-export function getUserById( req, res ) {
+export async function getUserById( req, res ) {
   const id = req.params.id
-  const userFound = users.find( user => user.id === id )
-  if ( !userFound ) {
+  const [ user, error ] = await awaitCatcher( UserModel.findById( id ) )
+  if ( !user || error ) {
     return res.status( 404 ).json( { status: "error", msg: "usuario no encontrado" } )
   }
-  return res.status( 200 ).json( userFound )
+  console.log( user )
+  return res.status( 200 ).json( user )
 }
 
-export function updateUserById( req, res ) {
+export async function updateUserById( req, res ) {
   const id = req.params.id
   const body = req.body
-  const userIndex = users.findIndex( user => user.id === id )
-  if ( userIndex === -1 ) {
+  const [ userUpdated, error ] = await awaitCatcher( UserModel.findByIdAndUpdate( id, body, { new: true } ) )
+  if ( error ) {
     return res.status( 404 ).json( { status: "error", msg: "usuario no encontrado" } )
   }
-  users[ userIndex ] = body
-  return res.status( 200 ).json( users[ userIndex ] )
+  return res.status( 200 ).json( userUpdated )
 }
 
-export function deleteUserById( req, res ) {
+export async function deleteUserById( req, res ) {
   const id = req.params.id
-  const userIndex = users.findIndex( user => user.id === id )
-  if ( userIndex === -1 ) {
+  const [ userDeleted, error ] = await awaitCatcher( UserModel.findByIdAndDelete( id ) )
+  if ( error ) {
     return res.status( 404 ).json( { status: "error", msg: "usuario no encontrado" } )
   }
-  const userRemoved = users.splice( userIndex, 1 )[ 0 ]
-  return res.status( 200 ).json( userRemoved )
+  return res.status( 200 ).json( userDeleted )
 }

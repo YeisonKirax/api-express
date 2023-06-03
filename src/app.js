@@ -1,9 +1,12 @@
 import cors from 'cors'
 import express from 'express'
+import { startConnection } from './config/database.js'
 import environment from './config/environment.js'
 import usersRouter from './resources/users/routes/users.routes.js'
 
 const app = express()
+
+startConnection()
 
 app.use( express.json() )
 app.use( cors() )
