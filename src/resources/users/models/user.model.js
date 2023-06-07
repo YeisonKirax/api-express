@@ -55,4 +55,15 @@ const userSchema = new mongoose.Schema( {
   } ]
 }, { versionKey: false } )
 
+userSchema.pre( 'save', function ( next ) {
+  console.log( "Usuario a agregar" )
+  console.log( this.toJSON() );
+  next()
+} )
+
+userSchema.post( 'save', function ( document ) {
+  console.log( "Usuario agregado" )
+  console.log( document );
+} )
+
 export const UserModel = new mongoose.model( 'User', userSchema )
