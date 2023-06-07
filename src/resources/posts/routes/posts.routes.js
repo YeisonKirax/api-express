@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { createUser, deleteUserById, getUserById, getUsers, updateUserById } from '../controllers/posts.controller.js'
+import { createPost, deletePostById, getPostById, getPosts, updatePostById } from '../controllers/posts.controller.js'
 
 const postsRouter = Router()
 const baseURI = '/posts'
 
-postsRouter.post( baseURI, createUser )
-postsRouter.get( baseURI, getUsers )
-postsRouter.get( `${ baseURI }/:id`, getUserById )
-postsRouter.patch( `${ baseURI }/:id`, updateUserById )
-postsRouter.delete( `${ baseURI }/:id`, deleteUserById )
+postsRouter.post( baseURI, createPost )
+postsRouter.get( baseURI, getPosts )
+postsRouter.get( `${ baseURI }/:id`, getPostById )
+postsRouter.patch( `${ baseURI }/:id`, updatePostById )
+postsRouter.delete( `${ baseURI }/:id`, deletePostById )
 
 export default postsRouter
