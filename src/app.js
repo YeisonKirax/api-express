@@ -2,6 +2,7 @@ import cors from 'cors'
 import express from 'express'
 import { startConnection } from './config/database.js'
 import environment from './config/environment.js'
+import postsRouter from './resources/posts/routes/posts.routes.js'
 import usersRouter from './resources/users/routes/users.routes.js'
 
 const app = express()
@@ -16,6 +17,7 @@ app.get( '/', function ( req, res ) {
 } )
 
 app.use( usersRouter )
+app.use( postsRouter )
 
 const { PORT } = environment
 app.listen( PORT, () => {
