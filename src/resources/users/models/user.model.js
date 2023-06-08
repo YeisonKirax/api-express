@@ -53,6 +53,21 @@ const userSchema = new mongoose.Schema( {
       required: true
     }
   } ]
-}, { versionKey: false } )
+}, { versionKey: false, id: false, toJSON: { virtuals: true }, toObject: { virtuals: true } } )
+
+userSchema.pre( 'save', function ( next ) {
+  console.log( "Usuario a agregar" )
+  console.log( this.toJSON() );
+  next()
+} )
+
+userSchema.post( 'save', function ( document ) {
+  console.log( "Usuario agregado" )
+  console.log( document );
+} )
+
+userSchema.virtual( 'fullName' ).get( function () {
+  return `${ this.name } ${ this.surname }`
+} )
 
 export const UserModel = new mongoose.model( 'User', userSchema )
