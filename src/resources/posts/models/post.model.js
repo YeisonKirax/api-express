@@ -5,6 +5,11 @@ const postSchema = new mongoose.Schema( {
   body: String,
   author: {
     type: SchemaTypes.ObjectId,
+    required: true,
+    ref: "User"
+  },
+  author2: {
+    type: String,
     required: true
   }
 }, { versionKey: false, id: false, toJSON: { virtuals: true }, toObject: { virtuals: true } } )
