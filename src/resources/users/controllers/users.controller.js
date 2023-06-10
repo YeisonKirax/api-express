@@ -28,9 +28,19 @@ export async function getUsers( req, res ) {
   return res.status( 200 ).json( users )
 }
 
+export async function getUserByEmail( email ) {
+  const [ user, error ] = await awaitCatcher( UserModel.findOne( { email: email } ) )
+  if ( !user || error ) {
+    throw new Error( "usuario no encontrado" )
+  }
+  return user
+}
 export async function getUserById( req, res ) {
-  const id = req.params.id
-  const [ user, error ] = await awaitCatcher( UserModel.findById( id ) )
+  if ( !req.user || !req.user.id ) {
+    return res.status( 400 ).json( { status: "error", msg: "id no presente" } )
+  }
+  const id = req.user.id
+  const [ user, error ] = await awaitCatcher( UserModel.findById( id, "-addresses" ) )
   if ( !user || error ) {
     return res.status( 404 ).json( { status: "error", msg: "usuario no encontrado" } )
   }

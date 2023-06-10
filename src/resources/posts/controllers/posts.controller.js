@@ -11,7 +11,7 @@ export async function createPost( req, res ) {
 }
 
 export async function getPosts( req, res ) {
-  const [ posts, error ] = await awaitCatcher( PostModel.find().populate( "author", "name surname age" ).exec() )
+  const [ posts, error ] = await awaitCatcher( PostModel.find().populate( "author", "name surname" ).exec() )
   if ( error ) {
     return res.status( 400 ).json( { status: "error", msg: error.message } )
   }
@@ -20,7 +20,7 @@ export async function getPosts( req, res ) {
 
 export async function getPostById( req, res ) {
   const id = req.params.id
-  const [ post, error ] = await awaitCatcher( PostModel.findById( id ).populate( "author", "-name -surname -age -fullName -_id" ).exec() )
+  const [ post, error ] = await awaitCatcher( PostModel.findById( id ).populate( "author", "-name -surname -fullName -_id" ).exec() )
   if ( !post || error ) {
     return res.status( 404 ).json( { status: "error", msg: "usuario no encontrado" } )
   }
