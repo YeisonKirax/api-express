@@ -9,10 +9,11 @@ export const verifyToken = ( req, res, next ) => {
   const token = authHeader.split( " " )[ 1 ]
   if ( !token ) return res.status( 401 ).json( { status: "error", msg: "token no presente" } )
   try {
-    const payload = jwt.verify( token )
+    const payload = jwt.verify( token, TOKEN_SECRET )
     req.user = payload
     next()
   } catch ( error ) {
+    console.error( error );;
     if ( error instanceof jwt.TokenExpiredError ) {
       return res.status( 401 ).json( { status: "error", msg: "token expiró" } )
     } else if ( error instanceof jwt.JsonWebTokenError ) {
@@ -21,4 +22,12 @@ export const verifyToken = ( req, res, next ) => {
       return res.status( 401 ).json( { status: "error", msg: error.message } )
     }
   }
+}
+
+export const isAdmin = ( req, res, next ) => {
+  const user = req.user
+  if ( user.role !== 'ADMIN' ) {
+    return res.status( 403 ).json( { "status": "error", msg: "el usuario no tiene los permisos necesarios" } )
+  }
+  next()
 }

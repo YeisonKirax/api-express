@@ -23,9 +23,10 @@ export const login = async ( req, res ) => {
     id: userFound._id,
     name: userFound.name,
     surname: userFound.surname,
+    role: userFound.isAdmin ? 'ADMIN' : 'GUEST'
   }
   const token = jwt.sign( payload, TOKEN_SECRET, {
-    expiresIn: 5,
+    expiresIn: "1h",
     algorithm: "HS512"
   } )
   return res.status( 200 ).json( { token } )
