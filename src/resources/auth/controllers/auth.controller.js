@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import environment from '../../../config/environment.js'
 
 const { TOKEN_SECRET } = environment
@@ -10,13 +10,12 @@ export const login = async ( req, res ) => {
   }
   // Buscar el usuario en la DB y se verifica si la contraseña es válida
   const payload = {
-    role: "ADMIN",
+    id: "647b745ad095eafd18d8e47b",
     name: "Yeison",
     surname: "Fernandez",
-    email: "yeison@gmail.com"
   }
   const token = jwt.sign( payload, TOKEN_SECRET, {
-    expiresIn: 10,
+    expiresIn: 5,
     algorithm: "HS512"
   } )
   return res.status( 200 ).json( { token } )
