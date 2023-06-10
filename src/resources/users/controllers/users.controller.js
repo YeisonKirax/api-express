@@ -28,6 +28,13 @@ export async function getUsers( req, res ) {
   return res.status( 200 ).json( users )
 }
 
+export async function getUserByEmail( email ) {
+  const [ user, error ] = await awaitCatcher( UserModel.findOne( { email: email } ) )
+  if ( !user || error ) {
+    throw new Error( "usuario no encontrado" )
+  }
+  return user
+}
 export async function getUserById( req, res ) {
   if ( !req.user || !req.user.id ) {
     return res.status( 400 ).json( { status: "error", msg: "id no presente" } )

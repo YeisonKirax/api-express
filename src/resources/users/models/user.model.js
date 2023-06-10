@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema( {
   password: {
     type: String,
     required: true,
-    select: false
   },
   isAdmin: {
     type: Boolean,
@@ -36,6 +35,11 @@ const userSchema = new mongoose.Schema( {
 userSchema.methods.hashPassword = function ( password ) {
   this.salt = crypto.randomBytes( 16 ).toString( "hex" )
   this.password = crypto.pbkdf2Sync( password, this.salt, 10000, 512, 'sha512' ).toString( 'hex' )
+}
+
+userSchema.methods.validPassword = function ( password ) {
+  const hash = crypto.pbkdf2Sync( password, this.salt, 10000, 512, 'sha512' ).toString( 'hex' )
+  return this.password === hash
 }
 
 userSchema.pre( 'save', function ( next ) {
