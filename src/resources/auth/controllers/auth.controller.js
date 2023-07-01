@@ -42,11 +42,19 @@ export const signup = async ( req, res ) => {
   const user = new UserModel( body )
   user.hashPassword( body.password )
   const [ userSaved, error ] = await awaitCatcher( user.save() )
-  userSaved = null
-  if(userSaved){}
   if ( !userSaved || error ) {
     console.error( error )
     return res.status( 400 ).json( { status: "error", msg: "no se pudo registrar al usuario" } )
   }
-  return res.status( 201 ).json( { status: "ok", msg: "usuario registrado correctamente" } )
+  const payload = {
+    id: user._id,
+    name: user.name,
+    surname: user.surname,
+    role: user.isAdmin ? 'ADMIN' : 'GUEST'
+  }
+  const token = jwt.sign( payload, TOKEN_SECRET, {
+    expiresIn: "1h",
+    algorithm: "HS512"
+  } )
+  return res.status( 201 ).json( { token } )
 }
